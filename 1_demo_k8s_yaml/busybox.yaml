@@ -1,0 +1,16 @@
+##################################################################################################
+# busybox tool
+##################################################################################################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  containers:
+    - name: busybox
+      image: yauritux/busybox-curl
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+  restartPolicy: Always

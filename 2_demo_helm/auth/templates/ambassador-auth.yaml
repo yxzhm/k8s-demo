@@ -1,0 +1,6 @@
+apiVersion: getambassador.io/v1
+kind:  AuthService
+metadata:
+  name: authentication
+spec:
+  auth_service: "{{ include "auth.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.port }}"

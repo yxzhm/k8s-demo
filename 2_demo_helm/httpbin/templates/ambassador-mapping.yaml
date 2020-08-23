@@ -1,0 +1,8 @@
+apiVersion: getambassador.io/v1
+kind:  Mapping
+metadata:
+  name:  httpbin-mapping
+spec:
+  prefix: /
+  method: GET
+  service: {{ include "httpbin.fullname" . }}.{{ .Release.Namespace }}

@@ -1,0 +1,137 @@
+---
+# Default values for ambassador.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+daemonSet: false
+
+# Enable autoscaling using HorizontalPodAutoscaler
+# daemonSet: true, autoscaling will be disabled
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 60
+
+# namespace:
+  # name: default
+
+# Additional container environment variable
+env:
+  {}
+
+
+imagePullSecrets: []
+
+securityContext:
+  runAsUser: 8888
+
+image:
+  repository: quay.io/datawire/ambassador
+  tag: 0.86.1
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+dnsPolicy: "ClusterFirst"
+hostNetwork: false
+
+service:
+  type: LoadBalancer
+
+  # Note that target http ports need to match your ambassador configurations service_port
+  # https://www.getambassador.io/reference/modules/#the-ambassador-module
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443
+  annotations:
+
+
+adminService:
+  create: true
+  type: ClusterIP
+  port: 8877
+  # NodePort used if type is NodePort
+  # nodePort: 38877
+  annotations:
+    {}
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+  podSecurityPolicies:
+    {}
+
+scope:
+  # tells Ambassador to only use resources in the namespace or namespace set by namespace.name
+  singleNamespace: false
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+initContainers: []
+
+sidecarContainers: []
+
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 3
+  failureThreshold: 3
+
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 3
+  failureThreshold: 3
+
+
+volumes: []
+
+volumeMounts: []
+
+podLabels:
+  {}
+
+podAnnotations:
+  {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "9102"
+
+deploymentAnnotations:
+  {}
+  # configmap.reloader.stakater.com/auto: "true"
+
+resources:
+  {}
+
+
+priorityClassName: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ambassadorConfig: ""
+
+crds:
+  enabled: true
+  create: true
+  keep: true
